@@ -1,6 +1,6 @@
 import type { WebApp } from "../types/WebApp"
 
-const API_URL = "http://localhost:9001/api"
+const API_URL = "/admin/api"
 
 export async function fetchWebApps(): Promise<WebApp[]> {
   const res = await fetch(`${API_URL}/webapps`)
