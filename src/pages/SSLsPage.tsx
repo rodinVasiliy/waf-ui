@@ -17,7 +17,7 @@ export function SSLsPage() {
       <ul>
         {ssls.map(ssl => (
           <li key={ssl.id}>
-            {ssl.name} : {ssl.certFileName}
+            {ssl.name} : "cert": {ssl.cert}, "key": {ssl.key}
           </li>
         ))}
       </ul>
