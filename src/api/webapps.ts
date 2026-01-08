@@ -16,3 +16,14 @@ export async function deleteWebApp(id:string): Promise<void> {
   })
   if (!res.ok) throw new Error("Failed to delete web app")
 }
+
+export async function createWebApp(data: any) {
+  const res = await fetch("/admin/api/webapps", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+
+  if (!res.ok) throw new Error("Failed to create webapp")
+  return res.json()
+}

@@ -85,7 +85,7 @@ export function WebAppsPage() {
 
             {apps.length === 0 && (
               <tr>
-                <td colSpan={5} style={{ textAlign: "center" }}>
+                <td colSpan={7} style={{ textAlign: "center" }}>
                   No web apps
                 </td>
               </tr>
