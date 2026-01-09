@@ -5,10 +5,12 @@ import { fetchPolicies } from "../api/policies";
 import { useNavigate } from "react-router-dom"
 import type { Policy } from "../types/Policy";
 import type { SSL } from "../types/SSL";
+import type { ValidationErrorResponse } from "../types/ValidationErrorResponse";
 
 export function WebAppCreatePage() {
     const [policies, setPolicies] = useState<Policy[]>([])
     const [ssls, setSSLs] = useState<SSL[]>([])
+    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 
     const [form, setForm] = useState({
         name: "",
@@ -42,9 +44,27 @@ export function WebAppCreatePage() {
             hosts: form.hosts.split(",").map(h => h.trim)
         }
 
-        await createWebApp(payload)
-        navigate("/webapps")
+        try {
+          await createWebApp(payload)
+          alert("Created!")
+          navigate("/webapps")
+        } catch (err: unknown) {
+          const e = err as ValidationErrorResponse
+          if (e.code === "validation_error") {
+            setValidationErrors(e.fields)
+            return
+          }
+          alert("Unexpected error")
+        }
+        
     }
+
+    Object.entries(validationErrors).map(([field, message]) => (
+      <p key={field} style={{color:"red"}}>
+        {field}: {message}
+      </p>
+    ))
+
 
     return (
     <div>

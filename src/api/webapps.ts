@@ -1,4 +1,5 @@
 import type { WebApp } from "../types/WebApp"
+import { apiRequest } from "./apirequest"
 
 const API_URL = "/admin/api/webapps"
 
@@ -18,12 +19,9 @@ export async function deleteWebApp(id:string): Promise<void> {
 }
 
 export async function createWebApp(data: any) {
-  const res = await fetch("/admin/api/webapps", {
+    return apiRequest(API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
   })
-
-  if (!res.ok) throw new Error("Failed to create webapp")
-  return res.json()
 }
