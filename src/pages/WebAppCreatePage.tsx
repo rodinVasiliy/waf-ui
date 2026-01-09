@@ -41,7 +41,7 @@ export function WebAppCreatePage() {
     async function  submit() {
         const payload = {
             ...form,
-            hosts: form.hosts.split(",").map(h => h.trim)
+            hosts: form.hosts.split(",").map(h => h.trim())
         }
 
         try {
@@ -69,6 +69,13 @@ export function WebAppCreatePage() {
     return (
     <div>
       <h1>Create WebApp</h1>
+
+      {/* Глобальные ошибки */}
+      {Object.entries(validationErrors).map(([field, message]) => (
+      <p key={field} style={{ color: "red" }}>
+        {field}: {message}
+      </p>
+      ))}
 
       <label>Name</label>
       <input value={form.name} onChange={e => update("name", e.target.value)} />
@@ -101,6 +108,4 @@ export function WebAppCreatePage() {
       <button onClick={submit}>Create</button>
     </div>
   )
-
-
 }
