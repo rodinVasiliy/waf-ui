@@ -3,6 +3,7 @@ import { WebAppsPage } from "./pages/WebAppsPage"
 import { WebAppCreatePage } from "./pages/WebAppCreatePage"
 import {SSLsPage} from "./pages/SSLsPage"
 import {ActionsPage} from "./pages/ActionsPage"
+import { SSLCreatePage } from "./pages/SSLCreatePage"
 import './App.css'
 import { AdminLayout } from "./layout/AdminLayout"
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/actions" element={<ActionsPage />} />
         
         <Route path="/webapps/new" element={<WebAppCreatePage />} />
+        <Route path="/ssls/new" element={<SSLCreatePage />} />
 
         <Route path="*" element={<div>404 Not Found</div>} />
       </Route>
