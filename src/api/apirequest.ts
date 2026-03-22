@@ -12,5 +12,6 @@ export async function apiRequest(url:string, options?: RequestInit) {
         }
         throw body
     }
-    return res.json()
+    const text = await res.text()
+    return text ? JSON.parse(text) : null
 }
