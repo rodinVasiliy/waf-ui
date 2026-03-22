@@ -67,13 +67,13 @@ export function SSLCreatePage() {
       <input value={form.name} onChange={e => update("name", e.target.value)} />
 
       <label>Certificate file</label>
-      <select value={form.certFile} onChange={e => update("cert", e.target.value)}>
+      <select value={form.cert} onChange={e => update("cert", e.target.value)}>
         <option value="">Select certificate…</option>
         {certs.map(f => <option key={f} value={f}>{f}</option>)}
       </select>
 
       <label>Key file</label>
-      <select value={form.keyFile} onChange={e => update("key", e.target.value)}>
+      <select value={form.key} onChange={e => update("key", e.target.value)}>
         <option value="">Select key…</option>
         {keys.map(f => <option key={f} value={f}>{f}</option>)}
       </select>
