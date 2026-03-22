@@ -10,8 +10,8 @@ export function SSLCreatePage() {
 
   const [form, setForm] = useState({
     name: "",
-    certFile: "",
-    keyFile: "",
+    cert: "",
+    key: "",
   })
 
   const navigate = useNavigate()
