@@ -33,7 +33,7 @@ export function WebAppsPage() {
       setApps(prev => prev.filter(a => a.id !== id))
     } catch (e) {
       console.error(e)
-      alert("Delete failed")
+      alert("Delete failed:")
     }
   }
 
