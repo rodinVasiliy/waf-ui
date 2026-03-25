@@ -10,7 +10,7 @@ export async function apiRequest(url:string, options?: RequestInit) {
         } catch {
             throw new Error("Unknown backend error")
         }
-        throw body
+        throw new Error(body?.message || "Request failed")
     }
     const text = await res.text()
     return text ? JSON.parse(text) : null

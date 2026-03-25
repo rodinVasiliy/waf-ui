@@ -26,3 +26,9 @@ export async function createSSL(data: any) {
     headers: { "Content-Type": "application/json" },
   })
 }
+export async function deleteSSL(id:string): Promise<void> {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "DELETE"
+  })
+  if (!res.ok) throw new Error("Failed to delete ssl config")
+}
