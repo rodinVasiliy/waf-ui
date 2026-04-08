@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 import type { Policy } from "../types/Policy";
 import type { SSL } from "../types/SSL";
 import type { ValidationErrorResponse } from "../types/ValidationErrorResponse";
+import "../App.css"
 
 export function WebAppCreatePage() {
   const [policies, setPolicies] = useState<Policy[]>([])
@@ -60,7 +61,7 @@ export function WebAppCreatePage() {
   }
 
   return (
-    <div>
+    <div className="form-container">
       <h1>Create WebApp</h1>
 
       {/* Глобальные ошибки */}
@@ -70,35 +71,49 @@ export function WebAppCreatePage() {
         </p>
       ))}
 
-      <label>Name</label>
-      <input value={form.name} onChange={e => update("name", e.target.value)} />
+      <div className="form-group">
+        <label>Name</label>
+        <input value={form.name} onChange={e => update("name", e.target.value)} />
+      </div>
 
-      <label>Upstream</label>
-      <input value={form.upstream} onChange={e => update("upstream", e.target.value)} />
+      <div className="form-group">
+        <label>Upstream</label>
+        <input value={form.upstream} onChange={e => update("upstream", e.target.value)} />
+      </div>
 
-      <label>Port</label>
-      <input type="number" value={form.port} onChange={e => update("port", e.target.value)} />
+      <div className="form-group">
+        <label>Port</label>
+        <input type="number" value={form.port} onChange={e => update("port", e.target.value)} />
+      </div>
 
-      <label>Hosts (comma separated)</label>
-      <input value={form.hosts} onChange={e => update("hosts", e.target.value)} />
+      <div className="form-group">
+        <label>Hosts (comma separated)</label>
+        <input value={form.hosts} onChange={e => update("hosts", e.target.value)} />
+      </div>
 
-      <label>Policy</label>
-      <select value={form.policyId} onChange={e => update("policyId", e.target.value)}>
-        <option value="">Select policy…</option>
-        {policies.map(p => (
-          <option key={p.id} value={p.id}>{p.name}</option>
-        ))}
-      </select>
+      <div className="form-group">
+        <label>Policy</label>
+        <select value={form.policyId} onChange={e => update("policyId", e.target.value)}>
+          <option value="">Select policy…</option>
+          {policies.map(p => (
+            <option key={p.id} value={p.id}>{p.name}</option>
+          ))}
+        </select>
+      </div>
 
-      <label>SSL Config</label>
-      <select value={form.sslId} onChange={e => update("sslId", e.target.value)}>
-        <option value="">Select SSL…</option>
-        {ssls.map(s => (
-          <option key={s.id} value={s.id}>{s.name}</option>
-        ))}
-      </select>
+      <div className="form-group">
+        <label>SSL Config</label>
+        <select value={form.sslId} onChange={e => update("sslId", e.target.value)}>
+          <option value="">Select SSL…</option>
+          {ssls.map(s => (
+            <option key={s.id} value={s.id}>{s.name}</option>
+          ))}
+        </select>
+      </div>
 
-      <button onClick={submit}>Create</button>
+      <div className="form-group">
+        <button onClick={submit}>Create</button>
+      </div>
     </div>
   )
 }

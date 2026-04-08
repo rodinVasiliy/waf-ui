@@ -29,12 +29,12 @@ export function SSLsPage() {
 
   return (
     <div>
-      <h1>SSLs</h1>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <button onClick={() => navigate("/ssls/new")}>
-            + Create SSL
-          </button>
-        </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1>SSL Configurations</h1>
+        <button onClick={() => navigate("/ssls/new")}>
+          + Create SSL
+        </button>
+      </div>
       <table border={1} cellPadding={8} cellSpacing={0} width="100%">
         <thead>
           <tr>
