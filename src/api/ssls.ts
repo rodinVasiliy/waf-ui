@@ -32,3 +32,23 @@ export async function deleteSSL(id:string): Promise<void> {
   })
   if (!res.ok) throw new Error("Failed to delete ssl config")
 }
+
+export async function getSSL(id:string): Promise<SSL> {
+  const res = await fetch(`${API_URL}/${id}`)
+  if (!res.ok) throw new Error("Failed to fetch ssl config")
+  return res.json()
+}
+
+export async function updateSSL(id:string, data: any) {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  if (!res.ok){
+    const err = await res.json()
+    throw err
+  }
+}
