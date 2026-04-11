@@ -42,6 +42,9 @@ export function WebAppsPage() {
       {/* Заголовок + Create */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>Web Apps</h1>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <button onClick={() => navigate("/webapps/new")}>
           + Create WebApp
         </button>

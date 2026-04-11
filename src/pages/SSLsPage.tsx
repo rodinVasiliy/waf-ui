@@ -31,6 +31,8 @@ export function SSLsPage() {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>SSL Configurations</h1>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <button onClick={() => navigate("/ssls/new")}>
           + Create SSL
         </button>
