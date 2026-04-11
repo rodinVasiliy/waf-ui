@@ -5,7 +5,6 @@ import { fetchPolicies } from "../api/policies";
 import { useNavigate } from "react-router-dom"
 import type { Policy } from "../types/Policy";
 import type { SSL } from "../types/SSL";
-import type { ValidationErrorResponse } from "../types/ValidationErrorResponse";
 import "../App.css"
 
 export function WebAppCreatePage() {

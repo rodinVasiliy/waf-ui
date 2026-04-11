@@ -7,7 +7,6 @@ import { getWebApp, updateWebApp } from "../api/webapps";
 
 import type { Policy } from "../types/Policy";
 import type { SSL } from "../types/SSL";
-import type { ValidationErrorResponse } from "../types/ValidationErrorResponse";
 
 import "../App.css";
 
