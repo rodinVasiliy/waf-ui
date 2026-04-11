@@ -21,7 +21,7 @@ function App() {
         <Route path="/webapps/new" element={<WebAppCreatePage />} />
         <Route path="/ssls/new" element={<SSLCreatePage />} />
 
-        <Route path="/ssl/:id/edit" element={<SSLEditPage />} />
+        <Route path="/ssls/:id/edit" element={<SSLEditPage />} />
 
         <Route path="*" element={<div>404 Not Found</div>} />
       </Route>
