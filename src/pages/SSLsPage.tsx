@@ -52,7 +52,7 @@ export function SSLsPage() {
               <td>{ssl.cert}</td>
               <td>{ssl.key}</td>
               <td>
-                <button onClick={() => navigate(`/ssl/${ssl.id}/edit`)}>
+                <button onClick={() => navigate(`/ssls/${ssl.id}/edit`)}>
                   Edit
                 </button>
                 {" "}
