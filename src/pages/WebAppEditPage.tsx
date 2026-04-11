@@ -84,6 +84,9 @@ export function WebAppEditPage() {
       alert("Updated!");
       navigate("/webapps");
     } catch (err: any) {
+      console.log("FULL ERROR:", err)
+      console.log("TYPE:", typeof err)
+      console.log("KEYS:", Object.keys(err || {}))
       if (err.code === "validation_error") {
         setValidationErrors(err.fields)
         return
