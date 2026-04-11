@@ -50,7 +50,8 @@ export function WebAppCreatePage() {
       alert("Created!")
       navigate("/webapps")
     } catch (err: any) {
-      if (err.code === "validation_error") {
+      console.log("ERR:", err)
+      if (err?.code === "validation_error") {
         setValidationErrors(err.fields)
         return
       }
