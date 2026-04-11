@@ -25,3 +25,19 @@ export async function createWebApp(data: any) {
     headers: { "Content-Type": "application/json" },
   })
 }
+
+export async function getWebApp(id:string): Promise<WebApp> {
+  const res = await fetch(`${API_URL}/${id}`)
+  if(!res.ok){
+    throw new Error("Failed to load web app")
+  }
+  return res.json()
+}
+
+export async function updateWebApp(id: string, data: any) {
+  return apiRequest(`${API_URL}/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+  })
+}
