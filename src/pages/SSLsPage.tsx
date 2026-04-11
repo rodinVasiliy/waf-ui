@@ -21,8 +21,14 @@ export function SSLsPage() {
       try {
         await deleteSSL(id)
         setSSLs(prev => prev.filter(a => a.id !== id))
-      } catch (e) {
+      } catch (e: any) {
         console.error(e)
+
+        if (e.code === "ssl_in_use") {
+          alert(`Cannot delete. Used in: ${e.webapps.join(", ")}`)
+          return
+        }
+
         alert("Delete failed:")
       }
     }

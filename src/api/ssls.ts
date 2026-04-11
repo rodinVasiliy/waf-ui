@@ -30,7 +30,10 @@ export async function deleteSSL(id:string): Promise<void> {
   const res = await fetch(`${API_URL}/${id}`, {
     method: "DELETE"
   })
-  if (!res.ok) throw new Error("Failed to delete ssl config")
+  if (!res.ok) {
+    const err = await res.json()
+    throw err
+  }
 }
 
 export async function getSSL(id:string): Promise<SSL> {
