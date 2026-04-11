@@ -84,10 +84,9 @@ export function WebAppEditPage() {
       await updateWebApp(id!, payload);
       alert("Updated!");
       navigate("/webapps");
-    } catch (err: unknown) {
-      const e = err as ValidationErrorResponse
-      if (e.code === "validation_error") {
-        setValidationErrors(e.fields)
+    } catch (err: any) {
+      if (err.code === "validation_error") {
+        setValidationErrors(err.fields)
         return
       }
       alert("Unexpected error");
