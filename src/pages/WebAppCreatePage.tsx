@@ -68,15 +68,22 @@ export function WebAppCreatePage() {
       alert("Created!")
       navigate("/webapps")
     } catch (err: any) {
-      console.log("ERR:", err)
-      const data = err?.responce?.data
-      
-      if (data?.code === "validation_error") {
-        setValidationErrors(data.fields)
+      if (err.code === "validation_error") {
+
+        const normalized: Record<string, string> = {}
+
+        for (const key in err.fields) {
+          const normalizedKey =
+            key.charAt(0).toLowerCase() + key.slice(1)
+
+          normalized[normalizedKey] = err.fields[key]
+        }
+
+        setValidationErrors(normalized)
         return
       }
 
-      alert("Unexpected error");
+      alert("Unexpected error")
     }
   }
 
