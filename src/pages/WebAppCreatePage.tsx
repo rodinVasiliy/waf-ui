@@ -41,9 +41,10 @@ export function WebAppCreatePage() {
   async function submit() {
     const errors: Record<string, string> = {}
 
-    if (!form.port) {
+    // фронт валидация
+    if (form.port === "") {
       errors.port = "Port is required"
-    } else if (!/^\d+$/.test(form.port)) {
+    } else if (isNaN(Number(form.port))) {
       errors.port = "Port must be a number"
     } else {
       const num = Number(form.port)
@@ -52,15 +53,10 @@ export function WebAppCreatePage() {
       }
     }
 
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors)
-      return
-    }
-
     const payload = {
       ...form,
       port: Number(form.port),
-      hosts: form.hosts.split(",").map(h => h.trim())
+      hosts: form.hosts.split(",").map((h: string) => h.trim())
     }
 
     try {
@@ -70,21 +66,31 @@ export function WebAppCreatePage() {
     } catch (err: any) {
       if (err.code === "validation_error") {
 
-        const normalized: Record<string, string> = {}
+        const backendErrors: Record<string, string> = {}
 
         for (const key in err.fields) {
           const normalizedKey =
             key.charAt(0).toLowerCase() + key.slice(1)
 
-          normalized[normalizedKey] = err.fields[key]
+          backendErrors[normalizedKey] = err.fields[key]
         }
 
-        setValidationErrors(normalized)
+        setValidationErrors({
+          ...backendErrors,
+          ...errors, 
+        })
+
         return
       }
 
       alert("Unexpected error")
     }
+
+    // если бэк не дал ошибок, но фронт дал
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+    }
+    
   }
 
   return (
