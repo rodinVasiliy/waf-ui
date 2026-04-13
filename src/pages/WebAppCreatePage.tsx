@@ -39,6 +39,24 @@ export function WebAppCreatePage() {
   }
 
   async function submit() {
+    const errors: Record<string, string> = {}
+
+    if (form.port === "") {
+      errors.port = "Port is required"
+    } else if (isNaN(Number(form.port))) {
+      errors.port = "Port must be a number"
+    } else {
+      const num = Number(form.port)
+      if (num < 1 || num > 65535) {
+        errors.port = "Port must be between 1 and 65535"
+      }
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors)
+      return
+    }
+
     const payload = {
       ...form,
       port: Number(form.port),
@@ -50,9 +68,6 @@ export function WebAppCreatePage() {
       alert("Created!")
       navigate("/webapps")
     } catch (err: any) {
-      console.log("FULL ERROR:", err)
-      console.log("TYPE:", typeof err)
-      console.log("KEYS:", Object.keys(err || {}))
       if (err?.code === "validation_error") {
         setValidationErrors(err.fields)
         return
