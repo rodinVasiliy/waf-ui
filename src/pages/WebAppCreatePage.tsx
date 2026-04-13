@@ -68,11 +68,15 @@ export function WebAppCreatePage() {
       alert("Created!")
       navigate("/webapps")
     } catch (err: any) {
-      if (err?.code === "validation_error") {
-        setValidationErrors(err.fields)
+      console.log("ERR:", err)
+      const data = err?.responce?.data
+      
+      if (data?.code === "validation_error") {
+        setValidationErrors(data.fields)
         return
       }
-      alert("Unexpected error")
+
+      alert("Unexpected error");
     }
   }
 
