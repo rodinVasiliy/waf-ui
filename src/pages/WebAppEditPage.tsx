@@ -120,7 +120,19 @@ export function WebAppEditPage() {
 
       <div className="form-group">
         <label>Port</label>
-        <input type="number" value={form.port} onChange={e => update("port", e.target.value)} />
+        <input type="number" min={1} max={65535} inputMode="numeric" pattern="[0-9]*" value={form.port} onChange={ e => {
+            const value = e.target.value;
+            if (value === "") {
+              update("port", "")
+              return
+            }
+
+            const num = Number(value)
+            if (num >= 1 && num <= 65535){
+              update("port", num)
+            }
+          }
+          } />
       </div>
 
       <div className="form-group">
