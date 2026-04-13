@@ -71,54 +71,58 @@ export function WebAppEditPage() {
   }
 
   async function submit() {
+  const errors: Record<string, string> = {}
 
-    const errors: Record<string, string> = {}
-
-    if (form.port === "") {
-      errors.port = "Port is required"
-    } else if (isNaN(Number(form.port))) {
-      errors.port = "Port must be a number"
-    } else {
-      const num = Number(form.port)
-      if (num < 1 || num > 65535) {
-        errors.port = "Port must be between 1 and 65535"
-      }
+  // фронт валидация
+  if (form.port === "") {
+    errors.port = "Port is required"
+  } else if (isNaN(Number(form.port))) {
+    errors.port = "Port must be a number"
+  } else {
+    const num = Number(form.port)
+    if (num < 1 || num > 65535) {
+      errors.port = "Port must be between 1 and 65535"
     }
+  }
 
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors)
+  const payload = {
+    ...form,
+    port: Number(form.port),
+    hosts: form.hosts.split(",").map((h: string) => h.trim())
+  }
+
+  try {
+    await updateWebApp(id!, payload)
+    alert("Updated!")
+    navigate("/webapps")
+  } catch (err: any) {
+    if (err.code === "validation_error") {
+
+      const backendErrors: Record<string, string> = {}
+
+      for (const key in err.fields) {
+        const normalizedKey =
+          key.charAt(0).toLowerCase() + key.slice(1)
+
+        backendErrors[normalizedKey] = err.fields[key]
+      }
+
+      setValidationErrors({
+        ...backendErrors,
+        ...errors, 
+      })
+
       return
     }
 
-    const payload = {
-      ...form,
-      port: Number(form.port),
-      hosts: form.hosts.split(",").map((h: string) => h.trim())
-    };
-
-    try {
-      await updateWebApp(id!, payload);
-      alert("Updated!");
-      navigate("/webapps");
-    } catch (err: any) {
-      if (err.code === "validation_error") {
-
-        const normalized: Record<string, string> = {}
-
-        for (const key in err.fields) {
-          const normalizedKey =
-            key.charAt(0).toLowerCase() + key.slice(1)
-
-          normalized[normalizedKey] = err.fields[key]
-        }
-
-        setValidationErrors(normalized)
-        return
-      }
-
-      alert("Unexpected error")
-    }
+    alert("Unexpected error")
   }
+
+  // если бэк не дал ошибок, но фронт дал
+  if (Object.keys(errors).length > 0) {
+    setValidationErrors(errors)
+  }
+}
 
   if (loading) return <div>Loading...</div>;
   if (!id) return <div>No ID</div>;
