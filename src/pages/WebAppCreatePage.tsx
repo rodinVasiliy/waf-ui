@@ -41,9 +41,9 @@ export function WebAppCreatePage() {
   async function submit() {
     const errors: Record<string, string> = {}
 
-    if (form.port === "") {
+    if (!form.port) {
       errors.port = "Port is required"
-    } else if (isNaN(Number(form.port))) {
+    } else if (!/^\d+$/.test(form.port)) {
       errors.port = "Port must be a number"
     } else {
       const num = Number(form.port)
@@ -80,31 +80,36 @@ export function WebAppCreatePage() {
     <div className="form-container">
       <h1>Create WebApp</h1>
 
-      {/* Глобальные ошибки */}
-      {Object.entries(validationErrors).map(([field, message]) => (
-        <p key={field} style={{ color: "red" }}>
-          {field}: {message}
-        </p>
-      ))}
-
       <div className="form-group">
         <label>Name</label>
         <input value={form.name} onChange={e => update("name", e.target.value)} />
+        {validationErrors.name && (
+          <div style={{ color: "red" }}>{validationErrors.name}</div>
+        )}
       </div>
 
       <div className="form-group">
         <label>Upstream</label>
         <input value={form.upstream} onChange={e => update("upstream", e.target.value)} />
+        {validationErrors.upstream && (
+          <div style={{ color: "red" }}>{validationErrors.upstream}</div>
+        )}
       </div>
 
       <div className="form-group">
         <label>Port</label>
         <input type="number" min={1} max={65535} value={form.port} onChange={ e => {update("port", e.target.value)}}/>
+        {validationErrors.port && (
+          <div style={{ color: "red" }}>{validationErrors.port}</div>
+        )}
       </div>
 
       <div className="form-group">
         <label>Hosts (comma separated)</label>
         <input value={form.hosts} onChange={e => update("hosts", e.target.value)} />
+        {validationErrors.hosts && (
+          <div style={{ color: "red" }}>{validationErrors.hosts}</div>
+        )}
       </div>
 
       <div className="form-group">
@@ -115,6 +120,9 @@ export function WebAppCreatePage() {
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
         </select>
+        {validationErrors.policyId && (
+          <div style={{ color: "red" }}>{validationErrors.policyId}</div>
+        )}
       </div>
 
       <div className="form-group">
@@ -125,6 +133,9 @@ export function WebAppCreatePage() {
             <option key={s.id} value={s.id}>{s.name}</option>
           ))}
         </select>
+        {validationErrors.sslId && (
+          <div style={{ color: "red" }}>{validationErrors.sslId}</div>
+        )}
       </div>
 
       <div className="form-group">

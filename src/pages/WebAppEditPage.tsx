@@ -116,30 +116,36 @@ export function WebAppEditPage() {
     <div className="form-container">
       <h1>Edit WebApp</h1>
 
-      {Object.entries(validationErrors).map(([field, message]) => (
-        <p key={field} style={{ color: "red" }}>
-          {field}: {message}
-        </p>
-      ))}
-
       <div className="form-group">
         <label>Name</label>
         <input value={form.name} onChange={e => update("name", e.target.value)} />
+        {validationErrors.name && (
+          <div style={{ color: "red" }}>{validationErrors.name}</div>
+        )}
       </div>
 
       <div className="form-group">
         <label>Upstream</label>
         <input value={form.upstream} onChange={e => update("upstream", e.target.value)} />
+        {validationErrors.upstream && (
+          <div style={{ color: "red" }}>{validationErrors.upstream}</div>
+        )}
       </div>
 
       <div className="form-group">
         <label>Port</label>
         <input type="number" min={1} max={65535} value={form.port} onChange={ e => {update("port", e.target.value)}}/>
+        {validationErrors.port && (
+          <div style={{ color: "red" }}>{validationErrors.port}</div>
+        )}
       </div>
 
       <div className="form-group">
         <label>Hosts (comma separated)</label>
         <input value={form.hosts} onChange={e => update("hosts", e.target.value)} />
+        {validationErrors.hosts && (
+          <div style={{ color: "red" }}>{validationErrors.hosts}</div>
+        )}
       </div>
 
       <div className="form-group">
@@ -150,6 +156,9 @@ export function WebAppEditPage() {
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
         </select>
+        {validationErrors.policyId && (
+          <div style={{ color: "red" }}>{validationErrors.policyId}</div>
+        )}
       </div>
 
       <div className="form-group">
@@ -160,6 +169,9 @@ export function WebAppEditPage() {
             <option key={s.id} value={s.id}>{s.name}</option>
           ))}
         </select>
+        {validationErrors.sslId && (
+          <div style={{ color: "red" }}>{validationErrors.sslId}</div>
+        )}
       </div>
 
       <div className="form-group">
