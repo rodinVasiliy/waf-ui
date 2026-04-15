@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { fetchActions } from "../api/actions"
 import type { Action } from "../types/Action"
+import "../App.css"
 
 export function ActionsPage() {
   const [actions, setActions] = useState<Action[]>([])
@@ -12,15 +13,14 @@ export function ActionsPage() {
   }, [])
 
   return (
-    <div>
+    <div className="form-container">
       <h1>Actions</h1>
-      <ul>
-        {actions.map(action => (
-          <li key={action.id}>
-            {action.name}
-          </li>
-        ))}
-      </ul>
+
+      {actions.map(action => (
+        <div key={action.id} className="form-group">
+          {action.name}
+        </div>
+      ))}
     </div>
   )
 }
