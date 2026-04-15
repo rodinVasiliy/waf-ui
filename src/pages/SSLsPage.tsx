@@ -15,23 +15,23 @@ export function SSLsPage() {
 
   const navigate = useNavigate()
 
-    async function onDelete(id: string) {
-      if (!confirm("Delete this ssl config?")) return
-  
-      try {
-        await deleteSSL(id)
-        setSSLs(prev => prev.filter(a => a.id !== id))
-      } catch (e: any) {
-        console.error(e)
+  async function onDelete(id: string) {
+    if (!confirm("Delete this ssl config?")) return
 
-        if (e.code === "ssl_in_use") {
-          alert(`Cannot delete. Used in: ${e.webapps.join(", ")}`)
-          return
-        }
+    try {
+      await deleteSSL(id)
+      setSSLs(prev => prev.filter(a => a.id !== id))
+    } catch (e: any) {
+      console.error(e)
 
-        alert("Delete failed")
+      if (e.code === "ssl_in_use") {
+        alert(`Cannot delete. Used in: ${e.webapps.join(", ")}`)
+        return
       }
+
+      alert("Delete failed")
     }
+  }
 
   return (
     <div>

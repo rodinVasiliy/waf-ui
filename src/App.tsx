@@ -8,6 +8,7 @@ import './App.css'
 import { AdminLayout } from "./layout/AdminLayout"
 import { SSLEditPage } from "./pages/SSLEditPage"
 import { WebAppEditPage } from "./pages/WebAppEditPage"
+import {PoliciesPage} from "./pages/PoliciesPage"
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
 
         <Route path="/ssls/:id/edit" element={<SSLEditPage />} />
         <Route path="/webapps/:id/edit" element={<WebAppEditPage />} />
+
+        <Route path="/policies" element={<PoliciesPage />} />
 
         <Route path="*" element={<div>404 Not Found</div>} />
       </Route>
