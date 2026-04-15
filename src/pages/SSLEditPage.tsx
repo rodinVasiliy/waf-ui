@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { fetchSSLFiles, getSSL, updateSSL } from "../api/ssls"
 import type { ValidationErrorResponse } from "../types/ValidationErrorResponse"
+import "../App.css"
 
 
 export function SSLEditPage() {
@@ -69,7 +70,7 @@ export function SSLEditPage() {
   }
 
   return (
-    <div>
+    <div className="form-container">
       <h1>Edit SSL</h1>
 
       {Object.entries(validationErrors).map(([field, message]) => (
@@ -78,22 +79,30 @@ export function SSLEditPage() {
         </p>
       ))}
 
-      <label>Name</label>
-      <input value={form.name} onChange={e => update("name", e.target.value)} />
+      <div className="form-group">
+        <label>Name</label>
+        <input value={form.name} onChange={e => update("name", e.target.value)} />
+      </div>
 
-      <label>Certificate file</label>
-      <select value={form.cert} onChange={e => update("cert", e.target.value)}>
-        <option value="">Select certificate…</option>
-        {certs.map(f => <option key={f} value={f}>{f}</option>)}
-      </select>
+      <div className="form-group">
+        <label>Certificate file</label>
+        <select value={form.cert} onChange={e => update("cert", e.target.value)}>
+          <option value="">Select certificate…</option>
+          {certs.map(f => <option key={f} value={f}>{f}</option>)}
+        </select>
+      </div>
 
-      <label>Key file</label>
-      <select value={form.key} onChange={e => update("key", e.target.value)}>
-        <option value="">Select key…</option>
-        {keys.map(f => <option key={f} value={f}>{f}</option>)}
-      </select>
+      <div className="form-group">
+        <label>Key file</label>
+        <select value={form.key} onChange={e => update("key", e.target.value)}>
+          <option value="">Select key…</option>
+          {keys.map(f => <option key={f} value={f}>{f}</option>)}
+        </select>
+      </div>
 
-      <button onClick={submit}>Save</button>
+      <div className="form-group">
+        <button onClick={submit}>Save</button>
+      </div>
     </div>
   )
 }
