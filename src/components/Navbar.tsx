@@ -6,6 +6,7 @@ export function Navbar() {
       <NavLink to="/webapps" style={styles.link}>WebApps</NavLink>
       <NavLink to="/actions" style={styles.link}>Actions</NavLink>
       <NavLink to="/ssls" style={styles.link}>SSL</NavLink>
+      <NavLink to="/policies" style={styles.link}>Policies</NavLink>
     </nav>
   )
 }
