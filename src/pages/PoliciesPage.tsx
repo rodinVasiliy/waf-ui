@@ -25,7 +25,7 @@ export function PoliciesPage() {
     } catch (e: any) {
       console.error(e)
 
-      if (e.code === "policy in use") {
+      if (e.code === "policy_in_use") {
         alert(`Cannot delete. Used in: ${e.webapps.join(", ")}`)
         return
       }
