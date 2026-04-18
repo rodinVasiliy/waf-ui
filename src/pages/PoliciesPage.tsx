@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { fetchPolicies } from "../api/policies"
 import { useNavigate } from "react-router-dom"
+import { deletePolicy } from "../api/policy"
 import type { Policy } from "../types/Policy"
 import "../App.css"
 
@@ -15,23 +16,23 @@ export function PoliciesPage() {
       .catch(console.error)
   }, [])
 
-//   async function onDelete(id: string) {
-//     if (!confirm("Delete this policy")) return
+  async function onDelete(id: string) {
+    if (!confirm("Delete this policy")) return
 
-//     try {
-//       await deletePolicy(id)
-//       setPolicies(prev => prev.filter(a => a.id !== id))
-//     } catch (e: any) {
-//       console.error(e)
+    try {
+      await deletePolicy(id)
+      setPolicies(prev => prev.filter(a => a.id !== id))
+    } catch (e: any) {
+      console.error(e)
 
-//       if (e.code === "policy in use") {
-//         alert(`Cannot delete. Used in: ${e.webapps.join(", ")}`)
-//         return
-//       }
+      if (e.code === "policy in use") {
+        alert(`Cannot delete. Used in: ${e.webapps.join(", ")}`)
+        return
+      }
 
-//       alert("Delete failed")
-//     }
-//   }
+      alert("Delete failed")
+    }
+  }
 
 
   return (
@@ -58,7 +59,7 @@ export function PoliciesPage() {
               <td>{policy.name}</td>
               <td>{policy.wl.join(", ")}</td>
               <td>{policy.webapps.join(", ")}</td>
-              {/* <td>
+              <td>
                 <button onClick={() => navigate(`/policies/${policy.id}/edit`)}>
                   Edit
                 </button>
@@ -66,7 +67,7 @@ export function PoliciesPage() {
                 <button onClick={() => onDelete(policy.id)}>
                   Delete
                 </button>
-              </td> */}
+              </td>
             </tr>
           ))}
         </tbody>

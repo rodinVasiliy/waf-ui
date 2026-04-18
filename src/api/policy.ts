@@ -9,3 +9,13 @@ export async function fetchPolicies(): Promise<Policy[]> {
   }
   return res.json()
 }
+
+export async function deletePolicy(id:string): Promise<void> {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "DELETE"
+  })
+  if (!res.ok) {
+    const err = await res.json()
+    throw err
+  }
+}
