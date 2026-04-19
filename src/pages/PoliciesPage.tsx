@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 import { fetchPolicies } from "../api/policies"
 import { useNavigate } from "react-router-dom"
 import { deletePolicy } from "../api/policy"
-import type { Policy } from "../types/Policy"
+import type { PolicyListItem } from "../types/Policy"
 import "../App.css"
 
 export function PoliciesPage() {
-  const [policies, setPolicies] = useState<Policy[]>([])
+  const [policies, setPolicies] = useState<PolicyListItem[]>([])
 
   const navigate = useNavigate()
 
