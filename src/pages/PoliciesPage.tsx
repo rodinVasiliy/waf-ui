@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { fetchPolicies } from "../api/policies"
 import { useNavigate } from "react-router-dom"
-import { deletePolicy } from "../api/policy"
+import { deletePolicy } from "../api/policies"
 import type { PolicyListItem } from "../types/Policy"
 import "../App.css"
 

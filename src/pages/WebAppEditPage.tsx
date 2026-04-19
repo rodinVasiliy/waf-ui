@@ -5,7 +5,7 @@ import { fetchSSLs } from "../api/ssls";
 import { fetchPolicies } from "../api/policies";
 import { getWebApp, updateWebApp } from "../api/webapps";
 
-import type { Policy } from "../types/Policy";
+import type { PolicyListItem } from "../types/Policy";
 import type { SSL } from "../types/SSL";
 
 import "../App.css";
@@ -14,7 +14,7 @@ export function WebAppEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [policies, setPolicies] = useState<Policy[]>([]);
+  const [policies, setPolicies] = useState<PolicyListItem[]>([]);
   const [ssls, setSSLs] = useState<SSL[]>([]);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 

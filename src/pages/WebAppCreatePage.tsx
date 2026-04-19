@@ -3,12 +3,12 @@ import { createWebApp } from "../api/webapps";
 import { fetchSSLs } from "../api/ssls";
 import { fetchPolicies } from "../api/policies";
 import { useNavigate } from "react-router-dom"
-import type { Policy } from "../types/Policy";
+import type { PolicyListItem } from "../types/Policy";
 import type { SSL } from "../types/SSL";
 import "../App.css"
 
 export function WebAppCreatePage() {
-  const [policies, setPolicies] = useState<Policy[]>([])
+  const [policies, setPolicies] = useState<PolicyListItem[]>([])
   const [ssls, setSSLs] = useState<SSL[]>([])
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 
