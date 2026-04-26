@@ -24,7 +24,6 @@ function App() {
         <Route path="/actions" element={<ActionsPage />} />
         <Route path="/rules" element={< RulesListPage/>} />
         
-        
         <Route path="/webapps/new" element={<WebAppCreatePage />} />
         <Route path="/ssls/new" element={<SSLCreatePage />} />
 
