@@ -132,17 +132,26 @@ export function PolicyEditPage() {
           <tbody>
             {policy.rules.map(rule => (
               <tr key={rule.id}>
-                <td>{rule.name}</td>
                 <td>
-                  {rule.actions.map(action => (
-                    <span
-                      key={action.id}
+                   <span
+                      key={rule.id}
                       style={{
                         marginRight: "8px",
                         cursor: "pointer",
                         textDecoration: "underline"
                       }}
-                      onClick={() => navigate(`/actions/${action.id}`)}
+                      onClick={() => navigate(`/rulse/${rule.id}/edit`)}
+                    >
+                      {rule.name}
+                    </span>
+                </td>
+                <td>
+                  {rule.actions.map(action => (
+                    <span
+                      style={{
+                        marginRight: "8px",
+                        textDecoration: "underline"
+                      }}
                     >
                       {action.name}
                     </span>
