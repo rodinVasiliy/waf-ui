@@ -21,4 +21,15 @@ export type RuleDetail = {
   enabled: boolean
   actions: ActionParamView[]
   policyActionParams: PolicyActionParamView[]
+  expr: ExprView
+}
+
+export type ExprView = {
+  nodeType: string
+  isNot: boolean
+  operator?: string
+  children?: ExprView[]
+  match?: string
+  field?: string
+  value?: string
 }

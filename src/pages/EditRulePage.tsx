@@ -1,8 +1,48 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { fetchRuleDetail } from "../api/rule"
-import type { RuleDetail } from "../types/Rule"
+import type { RuleDetail, ExprView } from "../types/Rule"
 import "../App.css"
+
+function ExprNode({ node }: { node: ExprView }) {
+  if (node.nodeType === "condition") {
+    return (
+      <div style={{ marginLeft: "16px" }}>
+        {node.isNot && <strong>NOT </strong>}
+        <span style={{ color: "#2c7be5" }}>
+          {node.field}
+        </span>{" "}
+        <span>{node.match}</span>{" "}
+        <span style={{ color: "#e5533d" }}>
+          "{node.value}"
+        </span>
+      </div>
+    )
+  }
+
+  // group
+  return (
+    <div
+      style={{
+        borderLeft: "2px solid #ccc",
+        marginLeft: "16px",
+        paddingLeft: "12px",
+        marginTop: "8px",
+      }}
+    >
+      <div>
+        {node.isNot && <strong>NOT </strong>}
+        <strong>{node.operator?.toUpperCase()}</strong>
+      </div>
+
+      <div>
+        {node.children?.map((child, i) => (
+          <ExprNode key={i} node={child} />
+        ))}
+      </div>
+    </div>
+  )
+}
 
 export function RuleDetailPage() {
   const { id } = useParams()
@@ -21,6 +61,7 @@ export function RuleDetailPage() {
       alert("Failed to load rule")
     }
   }
+
 
   if (!rule) {
     return <div>Loading...</div>
@@ -103,6 +144,26 @@ export function RuleDetailPage() {
           </table>
         )}
       </div>
+
+      {/* Expression */}
+      <div className="form-group">
+        <h2>Expression</h2>
+
+        {!rule.expr && <div>No expression</div>}
+
+        {rule.expr && (
+          <div
+            style={{
+              background: "#f9f9f9",
+              padding: "12px",
+              borderRadius: "8px",
+            }}
+          >
+            <ExprNode node={rule.expr} />
+          </div>
+        )}
+      </div>
+
     </div>
   )
 }
