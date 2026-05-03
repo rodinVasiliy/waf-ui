@@ -10,7 +10,7 @@ import { SSLEditPage } from "./pages/SSLEditPage"
 import { WebAppEditPage } from "./pages/WebAppEditPage"
 import {PoliciesPage} from "./pages/PoliciesPage"
 import { PolicyEditPage } from "./pages/PolicyEditPage"
-import { RuleDetailPage } from "./pages/EditRulePage"
+import { RuleEditPage } from "./pages/EditRulePage"
 import { RulesListPage } from "./pages/RulePage"
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
 
         <Route path="/ssls/:id/edit" element={<SSLEditPage />} />
         <Route path="/webapps/:id/edit" element={<WebAppEditPage />} />
-        <Route path="/rules/:id/edit" element={<RuleDetailPage />} />
+        <Route path="/rules/:id/edit" element={<RuleEditPage />} />
 
         <Route path="/policies" element={<PoliciesPage />} />
         <Route path="/policies/:id/edit" element={<PolicyEditPage />} />
