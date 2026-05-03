@@ -1,4 +1,4 @@
-import type { RuleDetail, RuleDetailResponse, RuleListItem } from "../types/Rule"
+import type { RuleDetailResponse, RuleListItem } from "../types/Rule"
 import { apiRequest } from "./apirequest"
 
 const API_URL = "/admin/api/rules"

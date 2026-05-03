@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom"
 import { fetchRuleDetail, updateRule } from "../api/rule"
 import type {
   RuleDetailResponse,
-  ActionParamView,
-  ShortPolicyView,
 } from "../types/Rule"
 import "../App.css"
 
