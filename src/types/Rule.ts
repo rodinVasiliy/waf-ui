@@ -4,7 +4,18 @@ export type RuleListItem = {
   enabled: boolean
 }
 
+export type RuleDetailResponse = {
+  rule: RuleDetail
+  available_actions: ActionParamView[]
+  available_policies: ShortPolicyView[]
+}
+
 export type ActionParamView = {
+  id: string
+  name: string
+}
+
+export type ShortPolicyView = {
   id: string
   name: string
 }

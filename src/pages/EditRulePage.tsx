@@ -1,169 +1,195 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { fetchRuleDetail } from "../api/rule"
-import type { RuleDetail, ExprView } from "../types/Rule"
+import { fetchRuleDetail, updateRule } from "../api/rule"
+import type {
+  RuleDetailResponse,
+  ActionParamView,
+  ShortPolicyView,
+} from "../types/Rule"
 import "../App.css"
 
-function ExprNode({ node }: { node: ExprView }) {
+function ExprNode({ node }: any) {
   if (node.nodeType === "condition") {
     return (
       <div style={{ marginLeft: "16px" }}>
         {node.isNot && <strong>NOT </strong>}
-        <span style={{ color: "#2c7be5" }}>
-          {node.field}
-        </span>{" "}
+        <span style={{ color: "#2c7be5" }}>{node.field}</span>{" "}
         <span>{node.match}</span>{" "}
-        <span style={{ color: "#e5533d" }}>
-          "{node.value}"
-        </span>
+        <span style={{ color: "#e5533d" }}>"{node.value}"</span>
       </div>
     )
   }
 
-  // group
   return (
-    <div
-      style={{
-        borderLeft: "2px solid #ccc",
-        marginLeft: "16px",
-        paddingLeft: "12px",
-        marginTop: "8px",
-      }}
-    >
+    <div style={{ borderLeft: "2px solid #ccc", marginLeft: 16, paddingLeft: 12 }}>
       <div>
         {node.isNot && <strong>NOT </strong>}
         <strong>{node.operator?.toUpperCase()}</strong>
       </div>
-
-      <div>
-        {node.children?.map((child, i) => (
-          <ExprNode key={i} node={child} />
-        ))}
-      </div>
+      {node.children?.map((c: any, i: number) => (
+        <ExprNode key={i} node={c} />
+      ))}
     </div>
   )
 }
 
-export function RuleDetailPage() {
+export function RuleEditPage() {
   const { id } = useParams()
 
-  const [rule, setRule] = useState<RuleDetail | null>(null)
+  const [data, setData] = useState<RuleDetailResponse | null>(null)
+
+  const [form, setForm] = useState({
+    name: "",
+    enabled: false,
+    actions: [] as string[],
+    overrides: {} as Record<string, string[]>, // policyId -> actionIds
+  })
 
   useEffect(() => {
     load()
   }, [id])
 
   async function load() {
-    try {
-      const data = await fetchRuleDetail(id!)
-      setRule(data)
-    } catch (e) {
-      alert("Failed to load rule")
-    }
+    const res = await fetchRuleDetail(id!)
+    setData(res)
+
+    // init form
+    const overrides: Record<string, string[]> = {}
+
+    res.rule.policyActionParams.forEach(p => {
+      overrides[p.id] = p.actions.map(a => a.id)
+    })
+
+    setForm({
+      name: res.rule.name,
+      enabled: res.rule.enabled,
+      actions: res.rule.actions.map(a => a.id),
+      overrides,
+    })
   }
 
-
-  if (!rule) {
-    return <div>Loading...</div>
+  function toggleAction(actionId: string) {
+    setForm(f => {
+      const exists = f.actions.includes(actionId)
+      return {
+        ...f,
+        actions: exists
+          ? f.actions.filter(a => a !== actionId)
+          : [...f.actions, actionId],
+      }
+    })
   }
+
+  function toggleOverride(policyId: string, actionId: string) {
+    setForm(f => {
+      const current = f.overrides[policyId] || []
+      const exists = current.includes(actionId)
+
+      return {
+        ...f,
+        overrides: {
+          ...f.overrides,
+          [policyId]: exists
+            ? current.filter(a => a !== actionId)
+            : [...current, actionId],
+        },
+      }
+    })
+  }
+
+  async function submit() {
+    await updateRule(id!, form)
+    alert("Saved!")
+  }
+
+  if (!data) return <div>Loading...</div>
+
+  const { rule, available_actions, available_policies } = data
 
   return (
     <div className="form-container">
-      <h1>Rule Detail</h1>
+      <h1>Edit Rule</h1>
 
       {/* Name */}
       <div className="form-group">
         <label>Name</label>
-        <div>{rule.name}</div>
+        <input
+          value={form.name}
+          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+        />
       </div>
 
       {/* Enabled */}
       <div className="form-group">
-        <label>Enabled</label>
-        <div>{rule.enabled ? "Yes" : "No"}</div>
+        <label>
+          <input
+            type="checkbox"
+            checked={form.enabled}
+            onChange={e =>
+              setForm(f => ({ ...f, enabled: e.target.checked }))
+            }
+          />
+          Enabled
+        </label>
       </div>
 
       {/* Actions */}
       <div className="form-group">
-        <label>Actions</label>
-        <div>
-          {rule.actions.length === 0 && <span>No actions</span>}
+        <h2>Actions</h2>
 
-          {rule.actions.map(a => (
-            <span
-              key={a.id}
-              style={{
-                marginRight: "8px",
-                textDecoration: "underline",
-              }}
-            >
-              {a.name}
-            </span>
-          ))}
-        </div>
+        {available_actions.map(a => (
+          <label key={a.id} style={{ display: "block" }}>
+            <input
+              type="checkbox"
+              checked={form.actions.includes(a.id)}
+              onChange={() => toggleAction(a.id)}
+            />
+            {a.name}
+          </label>
+        ))}
       </div>
 
-      {/* Override Actions */}
+      {/* Overrides */}
       <div className="form-group">
-        <h2>Override Actions (Policies)</h2>
+        <h2>Policy Overrides</h2>
 
-        {rule.policyActionParams.length === 0 && (
-          <div>No overrides</div>
-        )}
+        {available_policies.map(p => (
+          <div
+            key={p.id}
+            style={{
+              border: "1px solid #ddd",
+              padding: "10px",
+              marginBottom: "10px",
+            }}
+          >
+            <strong>{p.name}</strong>
 
-        {rule.policyActionParams.length > 0 && (
-          <table border={1} cellPadding={8} cellSpacing={0} width="100%">
-            <thead>
-              <tr>
-                <th>Policy</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rule.policyActionParams.map(p => (
-                <tr key={p.id}>
-                  <td>{p.name}</td>
-                  <td>
-                    {p.actions.length === 0 && <span>No actions</span>}
-
-                    {p.actions.map(a => (
-                      <span
-                        key={a.id}
-                        style={{
-                          marginRight: "8px",
-                          textDecoration: "underline",
-                        }}
-                      >
-                        {a.name}
-                      </span>
-                    ))}
-                  </td>
-                </tr>
+            <div style={{ marginTop: "8px" }}>
+              {available_actions.map(a => (
+                <label key={a.id} style={{ display: "block" }}>
+                  <input
+                    type="checkbox"
+                    checked={(form.overrides[p.id] || []).includes(a.id)}
+                    onChange={() => toggleOverride(p.id, a.id)}
+                  />
+                  {a.name}
+                </label>
               ))}
-            </tbody>
-          </table>
-        )}
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Expression */}
       <div className="form-group">
         <h2>Expression</h2>
 
-        {!rule.expr && <div>No expression</div>}
-
-        {rule.expr && (
-          <div
-            style={{
-              background: "#f9f9f9",
-              padding: "12px",
-              borderRadius: "8px",
-            }}
-          >
-            <ExprNode node={rule.expr} />
-          </div>
-        )}
+        <div style={{ background: "#f9f9f9", padding: 12 }}>
+          <ExprNode node={rule.expr} />
+        </div>
       </div>
 
+      <button onClick={submit}>Save</button>
     </div>
   )
 }
