@@ -50,4 +50,5 @@ export type RuleForm = {
   enabled: boolean
   actions: string[]
   overrides: Record<string, string[]>
+  expr: ExprView
 }

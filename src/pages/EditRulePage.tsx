@@ -4,30 +4,181 @@ import { fetchRuleDetail, updateRule } from "../api/rule"
 import {
   type RuleForm,
   type RuleDetailResponse,
+  type ExprView,
 } from "../types/Rule"
 import "../App.css"
 
-function ExprNode({ node }: any) {
+type Props = {
+  node: ExprView
+  onChange: (node: ExprView) => void
+  onDelete?: () => void
+}
+
+export function ExprEditor({ node, onChange, onDelete }: Props) {
+  function update<K extends keyof ExprView>(field: K, value: ExprView[K]) {
+    onChange({
+      ...node,
+      [field]: value,
+    })
+  }
+
+  function updateChild(index: number, child: ExprView) {
+    const children = [...(node.children || [])]
+    children[index] = child
+
+    update("children", children)
+  }
+
+  function removeChild(index: number) {
+    const children = (node.children || []).filter((_, i) => i !== index)
+    update("children", children)
+  }
+
+  function addCondition() {
+    const children = [...(node.children || [])]
+
+    children.push({
+      nodeType: "condition",
+      isNot: false,
+      field: "",
+      match: "equals",
+      value: "",
+    })
+
+    update("children", children)
+  }
+
+  function addGroup() {
+    const children = [...(node.children || [])]
+
+    children.push({
+      nodeType: "group",
+      isNot: false,
+      operator: "and",
+      children: [],
+    })
+
+    update("children", children)
+  }
+
+  // CONDITION
   if (node.nodeType === "condition") {
     return (
-      <div style={{ marginLeft: "16px" }}>
-        {node.isNot && <strong>NOT </strong>}
-        <span style={{ color: "#2c7be5" }}>{node.field}</span>{" "}
-        <span>{node.match}</span>{" "}
-        <span style={{ color: "#e5533d" }}>"{node.value}"</span>
+      <div
+        style={{
+          border: "1px solid #ddd",
+          padding: 10,
+          marginTop: 8,
+          borderRadius: 6,
+        }}
+      >
+        <label>
+          <input
+            type="checkbox"
+            checked={node.isNot}
+            onChange={e => update("isNot", e.target.checked)}
+          />
+          NOT
+        </label>
+
+        <div style={{ marginTop: 8 }}>
+          <input
+            placeholder="field"
+            value={node.field || ""}
+            onChange={e => update("field", e.target.value)}
+          />
+
+          <select
+            value={node.match || "equals"}
+            onChange={e => update("match", e.target.value)}
+            style={{ marginLeft: 8 }}
+          >
+            <option value="equals">equals</option>
+            <option value="in">in</option>
+            <option value="regex">regex</option>
+          </select>
+
+          <input
+            placeholder="value"
+            value={node.value || ""}
+            onChange={e => update("value", e.target.value)}
+            style={{ marginLeft: 8 }}
+          />
+        </div>
+
+        {onDelete && (
+          <button
+            style={{ marginTop: 8 }}
+            onClick={onDelete}
+          >
+            Delete
+          </button>
+        )}
       </div>
     )
   }
 
+  // GROUP
   return (
-    <div style={{ borderLeft: "2px solid #ccc", marginLeft: 16, paddingLeft: 12 }}>
+    <div
+      style={{
+        borderLeft: "3px solid #999",
+        paddingLeft: 12,
+        marginTop: 12,
+      }}
+    >
       <div>
-        {node.isNot && <strong>NOT </strong>}
-        <strong>{node.operator?.toUpperCase()}</strong>
+        <label>
+          <input
+            type="checkbox"
+            checked={node.isNot}
+            onChange={e => update("isNot", e.target.checked)}
+          />
+          NOT
+        </label>
+
+        <select
+          value={node.operator || "and"}
+          onChange={e => update("operator", e.target.value)}
+          style={{ marginLeft: 8 }}
+        >
+          <option value="and">AND</option>
+          <option value="or">OR</option>
+        </select>
+
+        {onDelete && (
+          <button
+            onClick={onDelete}
+            style={{ marginLeft: 8 }}
+          >
+            Delete Group
+          </button>
+        )}
       </div>
-      {node.children?.map((c: any, i: number) => (
-        <ExprNode key={i} node={c} />
-      ))}
+
+      <div style={{ marginTop: 8 }}>
+        {(node.children || []).map((child, index) => (
+          <ExprEditor
+            key={index}
+            node={child}
+            onChange={updated => updateChild(index, updated)}
+            onDelete={() => removeChild(index)}
+          />
+        ))}
+      </div>
+
+      <div style={{ marginTop: 8 }}>
+        <button onClick={addCondition}>
+          + Condition
+        </button>
+
+        <button
+          onClick={addGroup}
+          style={{ marginLeft: 8 }}
+        >
+          + Group
+        </button>
+      </div>
     </div>
   )
 }
@@ -42,6 +193,15 @@ export function RuleEditPage() {
     enabled: false, 
     actions: [],
     overrides: {},
+    expr: {
+      nodeType: "",
+      isNot: false,
+      operator: "",
+      children: [],
+      match: "",
+      field: "",
+      value: ""
+    },
   })
 
   useEffect(() => {
@@ -64,6 +224,7 @@ export function RuleEditPage() {
       enabled: res.rule.enabled,
       actions: res.rule.actions.map(a => a.id),
       overrides,
+      expr: res.rule.expr
     })
   }
 
@@ -103,7 +264,7 @@ export function RuleEditPage() {
 
   if (!data) return <div>Loading...</div>
 
-  const { rule, available_actions, available_policies } = data
+  const { available_actions, available_policies } = data
 
   return (
     <div className="form-container">
@@ -184,7 +345,7 @@ export function RuleEditPage() {
         <h2>Expression</h2>
 
         <div style={{ background: "#f9f9f9", padding: 12 }}>
-          <ExprNode node={rule.expr} />
+          <ExprEditor node={form.expr} onChange={expr => setForm(f => ({...f, expr, }))} />
         </div>
       </div>
 
