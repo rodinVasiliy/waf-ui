@@ -1,4 +1,4 @@
-import type { RuleDetailResponse, RuleListItem } from "../types/Rule"
+import type { RuleDetailResponse, RuleForm, RuleListItem } from "../types/Rule"
 import { apiRequest } from "./apirequest"
 
 const API_URL = "/admin/api/rules"
@@ -23,10 +23,25 @@ export async function fetchRules(): Promise<RuleListItem[]> {
   return res.json()
 }
 
-export async function updateRule(id:string, data:any) {
+const prepareDataForBackend = (form: RuleForm) => {
+  const overridesArray = Object.entries(form.overrides).map(([id, actions]) => ({
+    id,
+    actions
+  }));
+
+  return {
+    ...form,
+    overrides: overridesArray
+  };
+};
+
+export async function updateRule(id:string, data:RuleForm) {
+  const dataToSend = prepareDataForBackend(data);
   return apiRequest(`${API_URL}/${id}`, {
     method: "PUT",
-    body: JSON.stringify(data),
+    body: JSON.stringify(dataToSend),
     headers: { "Content-Type": "application/json" },
   })
 }
+
+

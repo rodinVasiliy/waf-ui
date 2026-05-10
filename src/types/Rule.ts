@@ -44,3 +44,10 @@ export type ExprView = {
   field?: string
   value?: string
 }
+
+export type RuleForm = {
+  name: string
+  enabled: boolean
+  actions: string[]
+  overrides: Record<string, string[]>
+}

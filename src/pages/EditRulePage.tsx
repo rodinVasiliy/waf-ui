@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { fetchRuleDetail, updateRule } from "../api/rule"
-import type {
-  RuleDetailResponse,
+import {
+  type RuleForm,
+  type RuleDetailResponse,
 } from "../types/Rule"
 import "../App.css"
 
@@ -36,11 +37,11 @@ export function RuleEditPage() {
 
   const [data, setData] = useState<RuleDetailResponse | null>(null)
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<RuleForm>({
     name: "",
-    enabled: false,
-    actions: [] as string[],
-    overrides: {} as Record<string, string[]>, // policyId -> actionIds
+    enabled: false, 
+    actions: [],
+    overrides: {},
   })
 
   useEffect(() => {
