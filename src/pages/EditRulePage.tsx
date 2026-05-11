@@ -5,8 +5,26 @@ import {
   type RuleForm,
   type RuleDetailResponse,
   type ExprView,
+  type ExprField,
+  type MatchType,
 } from "../types/Rule"
 import "../App.css"
+
+const AVAILABLE_FIELDS: ExprField[] = [
+  "IP",
+  "Host",
+  "Path",
+  "Method",
+  "UA",
+  "CountryCode",
+]
+
+const MATCHES: MatchType[] = [
+  "equals",
+  "in",
+  "regex",
+]
+
 
 type Props = {
   node: ExprView
@@ -14,8 +32,16 @@ type Props = {
   onDelete?: () => void
 }
 
-export function ExprEditor({ node, onChange, onDelete }: Props) {
-  function update<K extends keyof ExprView>(field: K, value: ExprView[K]) {
+export function ExprEditor({
+  node,
+  onChange,
+  onDelete,
+}: Props) {
+
+  function update<K extends keyof ExprView>(
+    field: K,
+    value: ExprView[K],
+  ) {
     onChange({
       ...node,
       [field]: value,
@@ -30,7 +56,9 @@ export function ExprEditor({ node, onChange, onDelete }: Props) {
   }
 
   function removeChild(index: number) {
-    const children = (node.children || []).filter((_, i) => i !== index)
+    const children =
+      (node.children || []).filter((_, i) => i !== index)
+
     update("children", children)
   }
 
@@ -40,7 +68,7 @@ export function ExprEditor({ node, onChange, onDelete }: Props) {
     children.push({
       nodeType: "condition",
       isNot: false,
-      field: "",
+      field: "Host",
       match: "equals",
       value: "",
     })
@@ -67,53 +95,77 @@ export function ExprEditor({ node, onChange, onDelete }: Props) {
       <div
         style={{
           border: "1px solid #ddd",
-          padding: 10,
+          borderRadius: 8,
+          padding: 12,
           marginTop: 8,
-          borderRadius: 6,
+          background: "#fafafa",
         }}
       >
-        <label>
-          <input
-            type="checkbox"
-            checked={node.isNot}
-            onChange={e => update("isNot", e.target.checked)}
-          />
-          NOT
-        </label>
+        <div style={{ marginBottom: 8 }}>
+          <label>
+            <input
+              type="checkbox"
+              checked={node.isNot}
+              onChange={e =>
+                update("isNot", e.target.checked)
+              }
+            />
+            NOT
+          </label>
+        </div>
 
-        <div style={{ marginTop: 8 }}>
-          <input
-            placeholder="field"
-            value={node.field || ""}
-            onChange={e => update("field", e.target.value)}
-          />
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
 
+          {/* FIELD */}
           <select
-            value={node.match || "equals"}
-            onChange={e => update("match", e.target.value)}
-            style={{ marginLeft: 8 }}
+            value={node.field}
+            onChange={e =>
+              update("field", e.target.value as ExprField)
+            }
           >
-            <option value="equals">equals</option>
-            <option value="in">in</option>
-            <option value="regex">regex</option>
+            {AVAILABLE_FIELDS.map(f => (
+              <option key={f} value={f}>
+                {f}
+              </option>
+            ))}
           </select>
 
+          {/* MATCH */}
+          <select
+            value={node.match}
+            onChange={e =>
+              update("match", e.target.value as MatchType)
+            }
+          >
+            {MATCHES.map(m => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            ))}
+          </select>
+
+          {/* VALUE */}
           <input
             placeholder="value"
             value={node.value || ""}
-            onChange={e => update("value", e.target.value)}
-            style={{ marginLeft: 8 }}
+            onChange={e =>
+              update("value", e.target.value)
+            }
           />
-        </div>
 
-        {onDelete && (
-          <button
-            style={{ marginTop: 8 }}
-            onClick={onDelete}
-          >
-            Delete
-          </button>
-        )}
+          {onDelete && (
+            <button onClick={onDelete}>
+              Delete
+            </button>
+          )}
+        </div>
       </div>
     )
   }
@@ -123,59 +175,74 @@ export function ExprEditor({ node, onChange, onDelete }: Props) {
     <div
       style={{
         borderLeft: "3px solid #999",
-        paddingLeft: 12,
         marginTop: 12,
+        paddingLeft: 12,
       }}
     >
-      <div>
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          alignItems: "center",
+        }}
+      >
         <label>
           <input
             type="checkbox"
             checked={node.isNot}
-            onChange={e => update("isNot", e.target.checked)}
+            onChange={e =>
+              update("isNot", e.target.checked)
+            }
           />
           NOT
         </label>
 
         <select
-          value={node.operator || "and"}
-          onChange={e => update("operator", e.target.value)}
-          style={{ marginLeft: 8 }}
+          value={node.operator}
+          onChange={e =>
+            update("operator", e.target.value as "and" | "or")
+          }
         >
           <option value="and">AND</option>
           <option value="or">OR</option>
         </select>
 
         {onDelete && (
-          <button
-            onClick={onDelete}
-            style={{ marginLeft: 8 }}
-          >
+          <button onClick={onDelete}>
             Delete Group
           </button>
         )}
       </div>
 
+      {/* CHILDREN */}
       <div style={{ marginTop: 8 }}>
         {(node.children || []).map((child, index) => (
           <ExprEditor
             key={index}
             node={child}
-            onChange={updated => updateChild(index, updated)}
-            onDelete={() => removeChild(index)}
+            onChange={updated =>
+              updateChild(index, updated)
+            }
+            onDelete={() =>
+              removeChild(index)
+            }
           />
         ))}
       </div>
 
-      <div style={{ marginTop: 8 }}>
+      {/* ADD */}
+      <div
+        style={{
+          marginTop: 8,
+          display: "flex",
+          gap: 8,
+        }}
+      >
         <button onClick={addCondition}>
           + Condition
         </button>
 
-        <button
-          onClick={addGroup}
-          style={{ marginLeft: 8 }}
-        >
+        <button onClick={addGroup}>
           + Group
         </button>
       </div>
@@ -190,17 +257,15 @@ export function RuleEditPage() {
 
   const [form, setForm] = useState<RuleForm>({
     name: "",
-    enabled: false, 
+    enabled: false,
     actions: [],
     overrides: {},
+
     expr: {
-      nodeType: "",
+      nodeType: "group",
       isNot: false,
-      operator: "",
+      operator: "and",
       children: [],
-      match: "",
-      field: "",
-      value: ""
     },
   })
 

@@ -36,12 +36,14 @@ export type RuleDetail = {
 }
 
 export type ExprView = {
-  nodeType: string
+  nodeType: NodeType
   isNot: boolean
-  operator?: string
+
+  operator?: OperatorType
   children?: ExprView[]
-  match?: string
-  field?: string
+
+  match?: MatchType
+  field?: ExprField
   value?: string
 }
 
@@ -52,3 +54,22 @@ export type RuleForm = {
   overrides: Record<string, string[]>
   expr: ExprView
 }
+
+export type NodeType = "condition" | "group"
+
+export type MatchType =
+  | "equals"
+  | "in"
+  | "regex"
+
+export type OperatorType =
+  | "and"
+  | "or"
+
+export type ExprField =
+  | "IP"
+  | "Host"
+  | "Path"
+  | "Method"
+  | "UA"
+  | "CountryCode"
