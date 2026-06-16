@@ -20,19 +20,20 @@ export type ShortPolicyView = {
   name: string
 }
 
-export type PolicyActionParamView = {
-  id: string
-  name: string
-  actions: ActionParamView[]
-}
-
 export type RuleDetail = {
   id: string
   name: string
   enabled: boolean
   actions: ActionParamView[]
+  policies: string[]
   policyActionParams: PolicyActionParamView[]
   expr: ExprView
+}
+
+export type PolicyActionParamView = {
+  id: string
+  name: string
+  actions: ActionParamView[]
 }
 
 export type ExprView = {
@@ -51,6 +52,7 @@ export type RuleForm = {
   name: string
   enabled: boolean
   actions: string[]
+  policies: string[]
   overrides: Record<string, string[]>
   expr: ExprView
 }

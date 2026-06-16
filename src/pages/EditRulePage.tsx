@@ -260,7 +260,7 @@ export function RuleEditPage() {
     enabled: false,
     actions: [],
     overrides: {},
-
+    policies: [],
     expr: {
       nodeType: "group",
       isNot: false,
@@ -288,6 +288,7 @@ export function RuleEditPage() {
       name: res.rule.name,
       enabled: res.rule.enabled,
       actions: res.rule.actions.map(a => a.id),
+      policies: res.rule.policies,
       overrides,
       expr: res.rule.expr
     })
@@ -301,6 +302,19 @@ export function RuleEditPage() {
         actions: exists
           ? f.actions.filter(a => a !== actionId)
           : [...f.actions, actionId],
+      }
+    })
+  }
+
+  function togglePolicy(policyId: string) {
+    setForm(f => {
+      const exists = f.policies.includes(policyId)
+
+      return {
+        ...f,
+        policies: exists
+          ? f.policies.filter(p => p !== policyId)
+          : [...f.policies, policyId],
       }
     })
   }
@@ -374,6 +388,26 @@ export function RuleEditPage() {
         ))}
       </div>
 
+      {/* Policies */}
+      <div className="form-group">
+        <h2>Policies</h2>
+
+        {available_policies.map(p => (
+          <label
+            key={p.id}
+            style={{ display: "block" }}
+          >
+            <input
+              type="checkbox"
+              checked={form.policies.includes(p.id)}
+              onChange={() => togglePolicy(p.id)}
+            />
+
+            {p.name}
+          </label>
+        ))}
+      </div>
+
       {/* Overrides */}
       <div className="form-group">
         <h2>Policy Overrides</h2>
@@ -410,7 +444,15 @@ export function RuleEditPage() {
         <h2>Expression</h2>
 
         <div style={{ background: "#f9f9f9", padding: 12 }}>
-          <ExprEditor node={form.expr} onChange={expr => setForm(f => ({...f, expr, }))} />
+          <ExprEditor
+          node={form.expr}
+          onChange={expr =>
+            setForm(f => ({
+              ...f,
+              expr,
+            }))
+          }
+          />
         </div>
       </div>
 
