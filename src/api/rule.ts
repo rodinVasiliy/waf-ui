@@ -23,24 +23,16 @@ export async function fetchRules(): Promise<RuleListItem[]> {
   return res.json()
 }
 
-const prepareDataForBackend = (form: RuleForm) => {
-  const overridesArray = Object.entries(form.overrides).map(([id, actions]) => ({
-    id,
-    actions
-  }));
-
-  return {
-    ...form,
-    overrides: overridesArray
-  };
-};
-
-export async function updateRule(id:string, data:RuleForm) {
-  const dataToSend = prepareDataForBackend(data);
+export async function updateRule(
+  id: string,
+  data: RuleForm
+) {
   return apiRequest(`${API_URL}/${id}`, {
     method: "PUT",
-    body: JSON.stringify(dataToSend),
-    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
 }
 
