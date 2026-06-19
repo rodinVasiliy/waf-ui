@@ -288,7 +288,7 @@ export function RuleEditPage() {
       name: res.rule.name,
       enabled: res.rule.enabled,
       actions: res.rule.actions.map(a => a.id),
-      policies: res.rule.policies,
+      policies: res.rule.policies.map(p => p.id),
       overrides: overrides,
       expr: res.rule.expr
     })
@@ -393,6 +393,15 @@ export function RuleEditPage() {
       )
       return
     }
+    console.log(
+      JSON.stringify(
+        {
+          ...form,
+        },
+        null,
+        2
+      )
+    )
     await updateRule(id!, form)
     alert("Saved!")
   }

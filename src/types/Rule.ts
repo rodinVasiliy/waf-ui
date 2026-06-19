@@ -25,7 +25,7 @@ export type RuleDetail = {
   name: string
   enabled: boolean
   actions: ActionParamView[]
-  policies: string[]
+  policies: ShortPolicyView[]
   policyOverrides: PolicyActionParamView[]
   expr: ExprView
 }
