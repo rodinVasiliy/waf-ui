@@ -7,6 +7,7 @@ import {
   type ExprView,
   type ExprField,
   type MatchType,
+  type RuleOverrideForm,
 } from "../types/Rule"
 import "../App.css"
 
@@ -259,7 +260,7 @@ export function RuleEditPage() {
     name: "",
     enabled: false,
     actions: [],
-    overrides: {},
+     overrides: [] as RuleOverrideForm[],
     policies: [],
     expr: {
       nodeType: "group",
@@ -278,11 +279,10 @@ export function RuleEditPage() {
     setData(res)
 
     // init form
-    const overrides: Record<string, string[]> = {}
-
-    res.rule.policyActionParams.forEach(p => {
-      overrides[p.id] = p.actions.map(a => a.id)
-    })
+    const overrides = res.rule.policyOverrides.map(o => ({
+      id: o.id,
+      actions: o.actions.map(a => a.id),
+    }))
 
     setForm({
       name: res.rule.name,
@@ -319,24 +319,80 @@ export function RuleEditPage() {
     })
   }
 
-  function toggleOverride(policyId: string, actionId: string) {
-    setForm(f => {
-      const current = f.overrides[policyId] || []
-      const exists = current.includes(actionId)
-
-      return {
-        ...f,
-        overrides: {
-          ...f.overrides,
-          [policyId]: exists
-            ? current.filter(a => a !== actionId)
-            : [...current, actionId],
+  function addOverride() {
+    setForm(f => ({
+      ...f,
+      overrides: [
+        ...f.overrides,
+        {
+          id: "",
+          actions: [],
         },
-      }
-    })
+      ],
+    }))
+  }
+
+  function updateOverridePolicy(
+    index: number,
+    policyId: string,
+  ) {
+    setForm(f => ({
+      ...f,
+      overrides: f.overrides.map((o, i) =>
+        i === index
+          ? {
+              ...o,
+              id: policyId,
+            }
+          : o
+      ),
+    }))
+  }
+
+  function toggleOverrideAction(
+    index: number,
+    actionId: string,
+  ) {
+    setForm(f => ({
+      ...f,
+      overrides: f.overrides.map((o, i) => {
+        if (i !== index) {
+          return o
+        }
+
+        const exists = o.actions.includes(actionId)
+
+        return {
+          ...o,
+          actions: exists
+            ? o.actions.filter(a => a !== actionId)
+            : [...o.actions, actionId],
+        }
+      }),
+    }))
+  }
+
+  function removeOverride(index: number) {
+    setForm(f => ({
+      ...f,
+      overrides: f.overrides.filter((_, i) => i !== index),
+    }))
   }
 
   async function submit() {
+    const invalidOverride =
+      form.overrides.some(
+        o =>
+          !o.id ||
+          o.actions.length === 0
+      )
+
+    if (invalidOverride) {
+      alert(
+        "Each override must contain a policy and at least one action"
+      )
+      return
+    }
     await updateRule(id!, form)
     alert("Saved!")
   }
@@ -412,29 +468,135 @@ export function RuleEditPage() {
       <div className="form-group">
         <h2>Policy Overrides</h2>
 
-        {available_policies.map(p => (
+        <button
+          type="button"
+          onClick={addOverride}
+          style={{ marginBottom: "12px" }}
+        >
+          + Add Override
+        </button>
+
+        {form.overrides.length === 0 && (
           <div
-            key={p.id}
             style={{
-              border: "1px solid #ddd",
-              padding: "10px",
-              marginBottom: "10px",
+              color: "#666",
+              fontStyle: "italic",
             }}
           >
-            <strong>{p.name}</strong>
+            No overrides configured
+          </div>
+        )}
 
-            <div style={{ marginTop: "8px" }}>
-              {available_actions.map(a => (
-                <label key={a.id} style={{ display: "block" }}>
-                  <input
-                    type="checkbox"
-                    checked={(form.overrides[p.id] || []).includes(a.id)}
-                    onChange={() => toggleOverride(p.id, a.id)}
-                  />
-                  {a.name}
-                </label>
-              ))}
+        {form.overrides.map((override, index) => (
+          <div
+            key={`${override.id}-${index}`}
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              padding: "12px",
+              marginBottom: "12px",
+              background: "#fafafa",
+            }}
+          >
+            <div style={{ marginBottom: "12px" }}>
+              <label>
+                Policy
+                <select
+                  value={override.id}
+                  onChange={e =>
+                    updateOverridePolicy(
+                      index,
+                      e.target.value,
+                    )
+                  }
+                  style={{
+                    display: "block",
+                    marginTop: "4px",
+                  }}
+                >
+                  <option value="">
+                    Select policy
+                  </option>
+
+                  {available_policies
+                    .filter(
+                      p =>
+                        p.id === override.id ||
+                        !form.overrides.some(
+                          o => o.id === p.id
+                        )
+                    )
+                    .map(p => (
+                      <option
+                        key={p.id}
+                        value={p.id}
+                      >
+                        {p.name}
+                      </option>
+                    ))}
+                </select>
+              </label>
             </div>
+
+            <div>
+              <strong>Actions</strong>
+
+              <div
+                style={{
+                  marginTop: "8px",
+                }}
+              >
+                {available_actions.map(a => (
+                  <label
+                    key={a.id}
+                    style={{
+                      display: "block",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={override.actions.includes(
+                        a.id
+                      )}
+                      onChange={() =>
+                        toggleOverrideAction(
+                          index,
+                          a.id,
+                        )
+                      }
+                    />
+
+                    {" "}
+                    {a.name}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {(override.id === "" ||
+              override.actions.length === 0) && (
+              <div
+                style={{
+                  color: "#d9534f",
+                  marginTop: "10px",
+                  fontSize: "14px",
+                }}
+              >
+                Override must contain a policy and at least one action
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() =>
+                removeOverride(index)
+              }
+              style={{
+                marginTop: "12px",
+              }}
+            >
+              Delete Override
+            </button>
           </div>
         ))}
       </div>
