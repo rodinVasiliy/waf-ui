@@ -260,7 +260,7 @@ export function RuleEditPage() {
     name: "",
     enabled: false,
     actions: [],
-     overrides: [] as RuleOverrideForm[],
+    overrides: [] as RuleOverrideForm[],
     policies: [],
     expr: {
       nodeType: "group",
@@ -289,7 +289,7 @@ export function RuleEditPage() {
       enabled: res.rule.enabled,
       actions: res.rule.actions.map(a => a.id),
       policies: res.rule.policies,
-      overrides,
+      overrides: overrides,
       expr: res.rule.expr
     })
   }

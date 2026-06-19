@@ -15,7 +15,6 @@ export type ActionParamView = {
   name: string
 }
 
-
 export type ShortPolicyView = {
   id: string
   name: string
