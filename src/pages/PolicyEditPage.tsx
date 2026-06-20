@@ -145,18 +145,6 @@ export function PolicyEditPage() {
                       {rule.name}
                     </span>
                 </td>
-                <td>
-                  {rule.actions.map(action => (
-                    <span
-                      style={{
-                        marginRight: "8px",
-                        textDecoration: "underline"
-                      }}
-                    >
-                      {action.name}
-                    </span>
-                  ))}
-                </td>
               </tr>
             ))}
           </tbody>

@@ -16,10 +16,4 @@ export interface PolicyRule {
   id: string
   name: string
   enabled: boolean
-  actions: PolicyAction[]
-}
-
-export interface PolicyAction {
-  id: string
-  name: string
 }
