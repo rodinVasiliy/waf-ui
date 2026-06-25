@@ -126,7 +126,6 @@ export function PolicyEditPage() {
           <thead>
             <tr>
               <th>Rule</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>

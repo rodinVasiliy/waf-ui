@@ -10,6 +10,11 @@ export type RuleDetailResponse = {
   available_policies: ShortPolicyView[]
 }
 
+export type RuleMetaResponse = {
+  available_actions: ActionParamView[]
+  available_policies: ShortPolicyView[]
+}
+
 export type ActionParamView = {
   id: string
   name: string
@@ -80,3 +85,19 @@ export type ExprField =
   | "Method"
   | "UA"
   | "CountryCode"
+
+export const emptyRuleForm: RuleForm = {
+  name: "",
+  enabled: true,
+
+  actions: [],
+  policies: [],
+  overrides: [],
+
+  expr: {
+    nodeType: "group",
+    isNot: false,
+    operator: "and",
+    children: [],
+  },
+}

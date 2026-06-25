@@ -1,4 +1,4 @@
-import type { RuleDetailResponse, RuleForm, RuleListItem } from "../types/Rule"
+import type { RuleDetailResponse, RuleForm, RuleListItem, RuleMetaResponse } from "../types/Rule"
 import { apiRequest } from "./apirequest"
 
 const API_URL = "/admin/api/rules"
@@ -21,6 +21,24 @@ export async function fetchRules(): Promise<RuleListItem[]> {
   }
 
   return res.json()
+}
+
+export async function fetchRuleMeta(): Promise<RuleMetaResponse> {
+    const res = await fetch(`${API_URL}/meta`)
+
+    if (!res.ok) {
+      throw new Error("failed to fetch rule meta")
+    }
+
+    return res.json()
+}
+
+export async function createRule(data: RuleForm) {
+  return apiRequest(API_URL, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+  })
 }
 
 export async function updateRule(
