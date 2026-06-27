@@ -1,6 +1,7 @@
 import { type ActionParamView, type RuleForm, type ShortPolicyView } from "../types/Rule"
 import { ExprEditor } from "./ExprEditor"
 import { RuleOverridesEditor } from "./RuleOverridesEditor"
+import { ValidationError } from "./ValidationError"
 
 type RuleEditorProps = {
   title: string
@@ -15,6 +16,9 @@ type RuleEditorProps = {
 
   availablePolicies: ShortPolicyView[]
 
+  validationErrors:
+    Record<string,string>
+
   submitText: string
 
   onSubmit: () => Promise<void>
@@ -25,6 +29,7 @@ export function RuleEditor({
   setForm,
   availableActions,
   availablePolicies,
+  validationErrors,
   onSubmit,
 }: RuleEditorProps) {
 
@@ -63,6 +68,11 @@ export function RuleEditor({
     <div className="form-container">
 
       <h1>Edit Rule</h1>
+
+            <ValidationError
+              field="name"
+              errors={validationErrors}
+            />
       
             {/* Name */}
             <div className="form-group">

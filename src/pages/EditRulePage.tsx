@@ -1,22 +1,29 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { fetchRuleDetail, updateRule } from "../api/rule"
 import {
-  type RuleForm,
   type RuleDetailResponse,
   emptyRuleForm,
 } from "../types/Rule"
 import "../App.css"
 import { RuleEditor } from "../components/RuleEditor"
+import type { ValidationErrorResponse } from "../types/ValidationErrorResponse"
 
 
 // RuleEditPage.tsx
 
 export function RuleEditPage() {
   const { id } = useParams()
+  const navigate = useNavigate()
 
-  const [data, setData] = useState<RuleDetailResponse | null>(null)
-  const [form, setForm] = useState<RuleForm>(emptyRuleForm)
+  const [data, setData] =
+    useState<RuleDetailResponse | null>(null)
+
+  const [form, setForm] =
+    useState(emptyRuleForm)
+
+  const [validationErrors, setValidationErrors] =
+    useState<Record<string, string>>({})
 
   useEffect(() => {
     load()
@@ -41,7 +48,25 @@ export function RuleEditPage() {
   }
 
   async function submit() {
+    try {
+    setValidationErrors({})
+
     await updateRule(id!, form)
+    alert("Updated!")
+    navigate("/rules")
+
+  } catch (err) {
+
+    const e = err as ValidationErrorResponse
+
+    if (e.code === "validation_error") {
+      setValidationErrors(e.fields)
+      return
+    }
+
+    alert("Unexpected error")
+  }
+    
   }
 
   if (!data) {
@@ -55,6 +80,7 @@ export function RuleEditPage() {
       setForm={setForm}
       availableActions={data.available_actions}
       availablePolicies={data.available_policies}
+      validationErrors={validationErrors}
       onSubmit={submit}
       submitText="Save"
     />
