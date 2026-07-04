@@ -32,7 +32,11 @@ export function RulesListPage() {
   return (
     <div className="form-container">
       <h1>Rules</h1>
-
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <button onClick={() => navigate("/rules/new")}>
+          + Create Rule
+        </button>
+      </div>
       <table border={1} cellPadding={8} cellSpacing={0} width="100%">
         <thead>
           <tr>

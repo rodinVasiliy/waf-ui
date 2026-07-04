@@ -12,6 +12,7 @@ import {PoliciesPage} from "./pages/PoliciesPage"
 import { PolicyEditPage } from "./pages/PolicyEditPage"
 import { RuleEditPage } from "./pages/EditRulePage"
 import { RulesListPage } from "./pages/RulePage"
+import { RuleCreatePage } from "./pages/CreateRulePage"
 
 function App() {
   return (
@@ -23,7 +24,8 @@ function App() {
         <Route path="/ssls" element={<SSLsPage />} />
         <Route path="/actions" element={<ActionsPage />} />
         <Route path="/rules" element={< RulesListPage/>} />
-        
+
+        <Route path="/rules/new" element={< RuleCreatePage/>} />
         <Route path="/webapps/new" element={<WebAppCreatePage />} />
         <Route path="/ssls/new" element={<SSLCreatePage />} />
 
