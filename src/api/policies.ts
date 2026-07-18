@@ -36,3 +36,11 @@ export async function updatePolicy(id:string, data:any) {
     headers: { "Content-Type": "application/json" },
   })
 }
+
+export async function createPolicy(data: PolicyEdit) {
+  return apiRequest(API_URL, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+  })
+}

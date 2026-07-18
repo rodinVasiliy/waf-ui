@@ -25,6 +25,7 @@ type RuleEditorProps = {
 }
 
 export function RuleEditor({
+  title,
   form,
   setForm,
   availableActions,
@@ -59,15 +60,13 @@ export function RuleEditor({
     }
 
   async function submit() {
-    // тут твои проверки
-
     await onSubmit()
   }
 
   return (
     <div className="form-container">
 
-      <h1>Edit Rule</h1>
+      <h1>{title}</h1>
 
             <ValidationError
               field="name"

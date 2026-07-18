@@ -17,3 +17,10 @@ export interface PolicyRule {
   name: string
   enabled: boolean
 }
+
+export const emptyPolicyForm: PolicyEdit = {
+  id :"",
+  name: "",
+  wl: [],
+  rules: [],
+}
