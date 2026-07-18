@@ -13,6 +13,7 @@ import { PolicyEditPage } from "./pages/PolicyEditPage"
 import { RuleEditPage } from "./pages/EditRulePage"
 import { RulesListPage } from "./pages/RulePage"
 import { RuleCreatePage } from "./pages/CreateRulePage"
+import { PolicyCreatePage } from "./pages/CreatePolicyPage"
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/rules/:id/edit" element={<RuleEditPage />} />
 
         <Route path="/policies" element={<PoliciesPage />} />
+        <Route path="/policies/new" element={<PolicyCreatePage />} />
         <Route path="/policies/:id/edit" element={<PolicyEditPage />} />
 
         <Route path="*" element={<div>404 Not Found</div>} />
