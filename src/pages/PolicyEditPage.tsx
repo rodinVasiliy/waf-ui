@@ -13,11 +13,6 @@ export function PolicyEditPage() {
   const [policy, setPolicy] = useState<PolicyEdit>(emptyPolicyForm)
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 
-  const [form, setForm] = useState({
-    name: "",
-    wl: [] as string[],
-  })
-
   useEffect(() => {
     load()
   }, [id])
@@ -25,13 +20,8 @@ export function PolicyEditPage() {
   async function load() {
     try {
       const data = await fetchPolicy(id!)
-
       setPolicy(data)
 
-      setForm({
-        name: data.name,
-        wl: data.wl,
-      })
     } catch (e) {
       alert("Failed to load policy")
     }
@@ -41,7 +31,7 @@ export function PolicyEditPage() {
     setValidationErrors({})
 
     try {
-      await updatePolicy(id!, form)
+      await updatePolicy(id!, policy)
       alert("Updated!")
       navigate("/policies")
     } catch (err: unknown) {
