@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import type { PolicyEdit } from "../types/Policy"
 
 type PolicyEditorProps = {
@@ -33,6 +34,7 @@ export function PolicyEditor({
   onSubmit,
 }: PolicyEditorProps) {
 
+  const navigate = useNavigate()
   function update(field: string, value: any) {
     setForm(f => ({ ...f, [field]: value }))
 
@@ -113,7 +115,7 @@ export function PolicyEditor({
                         cursor: "pointer",
                         textDecoration: "underline"
                       }}
-                      onClick={() => (`/rules/${rule.id}/edit`)}
+                      onClick={() => navigate(`/rules/${rule.id}/edit`)}
                     >
                       {rule.name}
                     </span>
