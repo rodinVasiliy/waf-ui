@@ -70,6 +70,7 @@ export type RuleForm = {
 export type NodeType = "condition" | "group"
 
 export type MatchType =
+  | "not_equals"
   | "equals"
   | "in"
   | "regex"

@@ -10,6 +10,7 @@ const AVAILABLE_FIELDS: ExprField[] = [
 ]
 
 const MATCHES: MatchType[] = [
+  "not_equals",
   "equals",
   "in",
   "regex",
