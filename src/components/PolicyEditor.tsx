@@ -113,7 +113,7 @@ export function PolicyEditor({
                         cursor: "pointer",
                         textDecoration: "underline"
                       }}
-                      onClick={() => (`/rulse/${rule.id}/edit`)}
+                      onClick={() => (`/rules/${rule.id}/edit`)}
                     >
                       {rule.name}
                     </span>
