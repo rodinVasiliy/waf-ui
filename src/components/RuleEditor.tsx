@@ -59,7 +59,16 @@ export function RuleEditor({
     })
     }
 
+    const hasInvalidOverrides = form.overrides.some(
+      override =>
+        !override.id ||
+        override.actions.length === 0
+    )
+
   async function submit() {
+      if (hasInvalidOverrides) {
+        return
+      }
     await onSubmit()
   }
 
@@ -167,9 +176,14 @@ export function RuleEditor({
                 />
               </div>
             </div>
-      
-            <button onClick={submit}>Save</button>
+            {/* Validation message for overrides */}
+            {hasInvalidOverrides && (
+              <p style={{ color: "#d9534f" }}>
+                Complete or delete all incomplete overrides before saving.
+              </p>
+            )}
+            <button onClick={submit} disabled={hasInvalidOverrides}>Save</button>
 
     </div>
   )
-}
+} 
